@@ -1,0 +1,5 @@
+[QuicktabsAdminTestCase]
+name = Quicktabs tests
+description = Add, edit and delete quicktabs.
+group = Quicktabs
+file = quicktabs.test

@@ -63,8 +63,8 @@ class QuickBlockContent extends QuickContent {
     if (isset($item['bid'])) {
       if (module_exists('block')) {
         $pos = strpos($item['bid'], '_delta_');
-        $module = drupal_substr($item['bid'], 0, $pos);
-        $delta = drupal_substr($item['bid'], $pos + 7);
+        $module = backdrop_substr($item['bid'], 0, $pos);
+        $delta = backdrop_substr($item['bid'], $pos + 7);
 
         // Make sure the user can access the block.
         if ($this->accessBlock($module, $delta)) {

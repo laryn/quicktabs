@@ -68,13 +68,13 @@ class QuickCallbackContent extends QuickContent {
     if (isset($item['actual_path'])) {
       // Retain the current page title as we'll need to set it back after
       // calling menu_execute_active_handler().
-      $page_title = drupal_get_title();
+      $page_title = backdrop_get_title();
       $response = menu_execute_active_handler($item['actual_path'], FALSE);
       // Revert the page title.
       if(isset($this->settings['use_title']) && $this->settings['use_title'] > 0){
-        $this->title = drupal_get_title();
+        $this->title = backdrop_get_title();
       }
-      drupal_set_title($page_title);
+      backdrop_set_title($page_title);
 
       if (!is_array($response)) {
         if (is_int($response)) {

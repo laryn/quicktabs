@@ -17,7 +17,7 @@ function quicktabs_tabstyles_theme() {
 function quicktabs_tabstyles_menu() {
   $items['admin/structure/quicktabs/styles'] = array(
     'title' => 'Styles',
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('quicktabs_tabstyles_styles'),
     'access arguments' => array('administer quicktabs'),
     'type' => MENU_LOCAL_TASK,
@@ -47,7 +47,7 @@ function quicktabs_tabstyles_styles() {
     '#attributes' => array('class' => array('quicktabs-tabstyles', 'clear-block')),
     '#theme' => 'quicktabs_style_options',
   );
-  
+
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
@@ -60,7 +60,7 @@ function quicktabs_tabstyles_styles() {
  */
 function quicktabs_tabstyles_styles_submit($form, &$form_state) {
   variable_set('quicktabs_tabstyle', $form_state['values']['quicktabs_tabstyle']);
-  drupal_set_message(t('The default quicktab style has been saved.'));
+  backdrop_set_message(t('The default quicktab style has been saved.'));
 }
 
 /**
@@ -83,16 +83,16 @@ function theme_quicktabs_style_options($variables) {
   foreach (element_children($style_element) as $style) {
     $element = $style_element[$style];
     $options['style'] = $style;
-    $quicktabs = quicktabs_build_quicktabs(drupal_strtolower($style), $options, $tabs);
-    $preview = '<div class="quicktabs-preview">'. drupal_render($quicktabs['content']) .'</div>';
+    $quicktabs = quicktabs_build_quicktabs(backdrop_strtolower($style), $options, $tabs);
+    $preview = '<div class="quicktabs-preview">'. backdrop_render($quicktabs['content']) .'</div>';
     $element['#description'] = t('%style preview', array('%style' => $element['#title'])) .':<br />'. $preview;
-    $markup .= drupal_render($element);
+    $markup .= backdrop_render($element);
   }
   $build = array(
     'style' => array('#markup' => $markup),
-    '#attached' => array('css' => array(drupal_get_path('module', 'quicktabs_tabstyles') . '/css/quicktabs-tabstyles-admin.css')),
+    '#attached' => array('css' => array(backdrop_get_path('module', 'quicktabs_tabstyles') . '/css/quicktabs-tabstyles-admin.css')),
   );
-  return drupal_render($build);
+  return backdrop_render($build);
 }
 
 
@@ -100,13 +100,13 @@ function theme_quicktabs_style_options($variables) {
  * Implements hook_quicktabs_tabstyles().
  */
 function quicktabs_tabstyles_quicktabs_tabstyles() {
-  $tabstyles_directory = drupal_get_path('module', 'quicktabs_tabstyles') . '/tabstyles';
+  $tabstyles_directory = backdrop_get_path('module', 'quicktabs_tabstyles') . '/tabstyles';
   $files = file_scan_directory($tabstyles_directory, '/\.css$/');
   $tabstyles = array();
   foreach ($files as $file) {
     // Skip RTL files.
     if (!strpos($file->name, '-rtl')) {
-      $tabstyles[$file->uri] = drupal_ucfirst($file->name);
+      $tabstyles[$file->uri] = backdrop_ucfirst($file->name);
     }
   }
   return $tabstyles;

@@ -5,7 +5,7 @@
  */
 (function($) {
 
-Drupal.quicktabsBbq = function($tabset, clickSelector, changeSelector) {
+Backdrop.quicktabsBbq = function($tabset, clickSelector, changeSelector) {
 
   changeSelector = changeSelector || clickSelector;
 

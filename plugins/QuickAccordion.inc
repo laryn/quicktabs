@@ -49,11 +49,11 @@ class QuickAccordion extends QuickRenderer {
     foreach ($quickset->getContents() as $key => $item) {
       if (!empty($item)) {
         $attributes = array();
-        $attributes['class'][] = drupal_html_class($item->getTitle());
-        drupal_alter('quicktabs_tablinks_attributes',$attributes,$quickset,$key);
+        $attributes['class'][] = backdrop_html_class($item->getTitle());
+        backdrop_alter('quicktabs_tablinks_attributes',$attributes,$quickset,$key);
         $attributes['href'] = '#'. $qsid . '_' . $key ;
         $render_array['content']['divs'][] = array(
-          '#prefix' => '<h3><a '. drupal_attributes($attributes) .'>'. check_plain($quickset->translateString($item->getTitle(), 'tab', $key)) .'</a></h3><div>',
+          '#prefix' => '<h3><a '. backdrop_attributes($attributes) .'>'. check_plain($quickset->translateString($item->getTitle(), 'tab', $key)) .'</a></h3><div>',
           '#suffix' => '</div>',
           'content' => $item->render(),
         );
@@ -77,11 +77,11 @@ class QuickAccordion extends QuickRenderer {
         array('system', 'ui.accordion'),
       ),
       'js' => array(
-        array('data' => drupal_get_path('module', 'quicktabs') . '/js/qt_accordion.js'),
+        array('data' => backdrop_get_path('module', 'quicktabs') . '/js/qt_accordion.js'),
       ),
     );
 
-    $javascript = drupal_add_js();
+    $javascript = backdrop_add_js();
     if (isset($javascript['settings']['data'])) {
       foreach ($javascript['settings']['data'] as $key => $settings) {
         if (key($settings) == 'quicktabs') {
@@ -93,7 +93,7 @@ class QuickAccordion extends QuickRenderer {
 
     if ($options['history']) {
       $attached['library'][] = array('system', 'jquery.bbq');
-      $attached['js'][] = array('data' => drupal_get_path('module', 'quicktabs') . '/js/quicktabs_bbq.js');
+      $attached['js'][] = array('data' => backdrop_get_path('module', 'quicktabs') . '/js/quicktabs_bbq.js');
     }
 
     $name = $this->quickset->getName();

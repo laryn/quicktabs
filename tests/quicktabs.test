@@ -1,27 +1,16 @@
 <?php
 
-class QuicktabsAdminTestCase extends DrupalWebTestCase {
-
-  /**
-   * Implementation of getInfo().
-   */
-  static function getInfo() {
-    return array(
-      'name' => t('Quicktabs tests'),
-      'description' => t('Add, edit and delete quicktabs.'),
-      'group' => t('Quicktabs'),
-    );
-  }
+class QuicktabsAdminTestCase extends BackdropWebTestCase {
 
   /**
    * Implementation of setUp().
    */
   function setUp() {
-    parent::setUp('ctools','quicktabs');
+    parent::setUp('plugin_manager','quicktabs');
 
     // Create and login user
-    $admin_user = $this->drupalCreateUser(array('access administration pages', 'administer quicktabs', 'administer nodes'));
-    $this->drupalLogin($admin_user);
+    $admin_user = $this->backdropCreateUser(array('access administration pages', 'administer quicktabs', 'administer nodes'));
+    $this->backdropLogin($admin_user);
 
     // Create some nodes that we can populate our tabs with.
     for ($i = 0; $i < 5; $i++) {
@@ -68,7 +57,7 @@ class QuicktabsAdminTestCase extends DrupalWebTestCase {
     // Now add on the tabs info to the $saved array - it's the same as what we
     // put in the edit form but we need it in proper array format.
     $saved['tabs'] = array(0 => array('type' => 'node', 'nid' => 1, 'view_mode' => 'full', 'title' => $tab_title_first, 'weight' => 0), 1 => array('type' => 'node', 'nid' => 2, 'view_mode' => 'full', 'title' => $tab_title_second, 'weight' => 1));
-    $this->drupalPost('admin/structure/quicktabs/add', $edit, t('Save'));
+    $this->backdropPost('admin/structure/quicktabs/add', $edit, t('Save'));
 
     // Check that the quicktabs object is in the database.
     $quicktabs = quicktabs_load($edit['machine_name']);
@@ -111,10 +100,10 @@ class QuicktabsAdminTestCase extends DrupalWebTestCase {
       'tabs[1][node][hide_title]' => 1,
     );
     $saved['tabs'] = array(0 => array('type' => 'node', 'nid' => 4, 'title' => $tab_title_second, 'weight' => 0, 'view_mode' => 'teaser', 'hide_title' => 1), 1 => array('type' => 'node', 'nid' => 3, 'title' => $tab_title_first, 'weight' => 1, 'view_mode' => 'teaser', 'hide_title' => 0));
-    $this->drupalPost('admin/structure/quicktabs/manage/'. $quicktabs->machine_name .'/edit', $edit, t('Save'));
+    $this->backdropPost('admin/structure/quicktabs/manage/'. $quicktabs->machine_name .'/edit', $edit, t('Save'));
 
     // Reset static vars because ctools will have cached the original $quicktabs object
-    drupal_static_reset();
+    backdrop_static_reset();
     // Check that the quicktabs object is in the database.
     $edited_qt = quicktabs_load($quicktabs->machine_name);
     $this->assertTrue($edited_qt != FALSE, t('Quicktabs instance found in database'));
@@ -125,9 +114,9 @@ class QuicktabsAdminTestCase extends DrupalWebTestCase {
     }
 
     // Delete the Quicktabs instance through the UI.
-    $this->drupalPost('admin/structure/quicktabs/manage/'. $quicktabs->machine_name .'/delete', array(), t('Delete'));
+    $this->backdropPost('admin/structure/quicktabs/manage/'. $quicktabs->machine_name .'/delete', array(), t('Delete'));
     // Reset static vars because ctools will have cached the original $quicktabs object
-    drupal_static_reset();
+    backdrop_static_reset();
     // Check that the quicktabs object is no longer in the database.
     $this->assertNull(quicktabs_load($quicktabs->machine_name), t('Quicktabs instance not found in database'));
   }

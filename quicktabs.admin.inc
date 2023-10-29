@@ -10,41 +10,39 @@
 function quicktabs_list() {
   $header = array(
     array('data' => t('QuickSet')),
-    array('data' => t('Storage')),
-    array('data' => t('Operations'), 'colspan' => 4),
+    array('data' => t('Operations')),
   );
   $rows = array();
 
   foreach (quicktabs_load_multiple() as $qt) {
-    // Determine storage
-    switch ($qt->export_type) {
-      case EXPORT_IN_DATABASE | EXPORT_IN_CODE:
-        $storage = t('Overridden');
-        $delete = l(t('Revert'), 'admin/structure/quicktabs/manage/'. $qt->machine_name .'/delete');
-        break;
-      case EXPORT_IN_DATABASE:
-        $storage = t('Normal');
-        $delete = l(t('Delete'), 'admin/structure/quicktabs/manage/'. $qt->machine_name .'/delete');
-        break;
-      case EXPORT_IN_CODE:
-        $storage = t('Default');
-        $delete = '';
-        break;
-    }
-
-    $tablerow = array(
+    $row = array(
       array('data' => check_plain($qt->title)),
-      array('data' => $storage),
-      array('data' => l(t('Edit'), 'admin/structure/quicktabs/manage/'. $qt->machine_name .'/edit')),
-      array('data' => l(t('Export'), 'admin/structure/quicktabs/manage/'. $qt->machine_name .'/export')),
-      array('data' => l(t('Clone'), 'admin/structure/quicktabs/manage/'. $qt->machine_name .'/clone')),
-      array('data' => $delete),
     );
-    $rows[] = $tablerow;
+    $links = array();
+    $links['configure'] = array(
+      'title' => t('Configure'),
+      'href' => 'admin/structure/quicktabs/manage/'. $qt->machine_name .'/edit',
+    );
+    $links['clone'] = array(
+      'title' => t('Clone'),
+      'href' => 'admin/structure/quicktabs/manage/'. $qt->machine_name .'/clone',
+    );
+    $links['delete'] = array(
+      'title' => t('Delete'),
+      'href' => 'admin/structure/quicktabs/manage/'. $qt->machine_name .'/delete',
+    );
+
+    $operations = array(
+      '#type' => 'operations',
+      '#links' => $links,
+    );
+    $row[] = array('data' => $operations);
+
+    $rows[] = $row;
   }
 
   if (empty($rows)) {
-    $rows[] = array(array('data' => t('No quicktabs instances available.'), 'colspan' => 6));
+    $rows[] = array(array('data' => t('No quicktabs instances available.'), 'colspan' => 2));
   }
 
   $build = array(
@@ -62,13 +60,13 @@ function quicktabs_list() {
 function quicktabs_clone($qt) {
   unset($qt->machine_name);
   $qt->title = '';
-  return drupal_get_form('quicktabs_form', 'clone', $qt);
+  return backdrop_get_form('quicktabs_form', 'clone', $qt);
 }
 
 /**
  * Build the quicktab creation and edit form.
  */
-function quicktabs_form($form, &$form_state, $formtype, $qt = NULL) {
+function quicktabs_form($form, &$form_state, $form_type, $qt = NULL) {
   if (!isset($qt)) {
     $qt = new stdClass;
   }
@@ -88,7 +86,7 @@ function quicktabs_form($form, &$form_state, $formtype, $qt = NULL) {
     $qt->tabs[] = array();
   }
   $form_state['num_tabs'] = count($qt->tabs);
-  
+
   // If the "Remove" button was clicked for a tab, we need to remove that tab
   // from the form.
   if (isset($form_state['to_remove'])) {
@@ -133,7 +131,7 @@ function _quicktabs_admin_main_form($form_state, &$qt) {
   if (isset($form_state['values']['title'])) {
     $qt = _quicktabs_convert_form_to_quicktabs($form_state);
   }
-  
+
   $form['title'] = array(
     '#title' => t('Title'),
     '#description' => t('This will appear as the block title.'),
@@ -142,7 +140,7 @@ function _quicktabs_admin_main_form($form_state, &$qt) {
     '#weight' => -9,
     '#required' => TRUE,
   );
-  
+
   $form['machine_name'] = array(
     '#type' => 'machine_name',
     '#maxlength' => 32,
@@ -160,15 +158,15 @@ function _quicktabs_admin_main_form($form_state, &$qt) {
     $form['machine_name']['#value'] = $qt->machine_name;
   }
 
-  ctools_include('plugins');
-  $renderers = ctools_get_plugins('quicktabs', 'renderers');
+  $renderers = plugin_manager_get_plugins('quicktabs', 'renderers');
+
   $renderer_options = array();
   foreach ($renderers as $name => $info) {
-    if ($class = ctools_plugin_load_class('quicktabs', 'renderers', $name, 'handler')) {
+    if ($class = plugin_manager_load_class('quicktabs', 'renderers', $name, 'handler')) {
       // Add the renderer to the dropdown list of renderers
       $renderer_options[$name] = $name;
       // Get the renderer's options form elements
-      
+
       // PHP 5.2 doesn't support $class::staticMethod() syntax, so we have to
       // use call_user_func_array() until PHP 5.3 is required.
       $renderer_form_options[$name] = call_user_func_array(array($class, 'optionsForm'), array($qt));
@@ -192,7 +190,7 @@ function _quicktabs_admin_main_form($form_state, &$qt) {
     }
     $form['options'][$renderer] = $options;
   }
-  
+
   $styles = module_invoke_all('quicktabs_tabstyles');
   if (count($styles)) {
     $style_options = array();
@@ -281,13 +279,13 @@ function _quicktabs_admin_main_form($form_state, &$qt) {
 
 /*
  * Build one row (one tabpage) on the QT admin form.
- * 
+ *
  * @param array $tab
  *  An array containing the details of this particular tabpage.
- * 
+ *
  * @param object $qt
  *  An object representing the Quicktabs instance that the tabs are
- *  being built for. 
+ *  being built for.
  */
 function _quicktabs_form(array $tab, $qt) {
   $form['#tree'] = TRUE;
@@ -306,8 +304,7 @@ function _quicktabs_form(array $tab, $qt) {
   );
 
   // Load all "contents" plugins to display a choice of content types.
-  ctools_include('plugins');
-  $contents = ctools_get_plugins('quicktabs', 'contents');
+  $contents = plugin_manager_get_plugins('quicktabs', 'contents');
   foreach ($contents as $name => $info) {
     if (isset($info['dependencies'])) {
       foreach ($info['dependencies'] as $dep) {
@@ -356,7 +353,7 @@ function _quicktabs_form(array $tab, $qt) {
 function theme_quicktabs_admin_form_tabs($variables) {
   $tabs = $variables['tabs'];
 
-  drupal_add_tabledrag('qt-tablist-table', 'order', 'sibling', 'qt-tabs-weight');
+  backdrop_add_tabledrag('qt-tablist-table', 'order', 'sibling', 'qt-tabs-weight');
   $rows = array();
   $header = array(
     t('Tab title'),
@@ -372,9 +369,9 @@ function theme_quicktabs_admin_form_tabs($variables) {
 
     // tab settings fields
     $tab_fields = array(
-      array('data' => drupal_render($tab['title']), 'class' => array('qt-tab-title')),
-      array('data' => drupal_render($tab['weight']), 'class' => array('qt-tab-weight')),
-      array('data' => drupal_render($tab['type']), 'class' => array('qt-tab-type')),
+      array('data' => backdrop_render($tab['title']), 'class' => array('qt-tab-title')),
+      array('data' => backdrop_render($tab['weight']), 'class' => array('qt-tab-weight')),
+      array('data' => backdrop_render($tab['type']), 'class' => array('qt-tab-type')),
     );
 
     // content plugins
@@ -382,10 +379,10 @@ function theme_quicktabs_admin_form_tabs($variables) {
     foreach ($tab['type']['#options'] as $content_provider ) {
       $tab[$content_provider]['#prefix'] = '<div class="qt-tab-options-form qt-tab-'. $content_provider .'-options-form">';
       $tab[$content_provider]['#suffix'] = '</div>';
-      $content_plugins .= drupal_render($tab[$content_provider]);
+      $content_plugins .= backdrop_render($tab[$content_provider]);
     }
     $tab_fields[] = array('data' => $content_plugins);
-    $tab_fields[] = array('data' => drupal_render($tab['remove']), 'class' => array('qt-tab-remove'));
+    $tab_fields[] = array('data' => backdrop_render($tab['remove']), 'class' => array('qt-tab-remove'));
 
     // Build the table row.
     $row = array(
@@ -407,10 +404,10 @@ function theme_quicktabs_admin_form_tabs($variables) {
     '#attributes' => array('id' => 'qt-tablist-table'),
     '#weight' => -1,
   );
-  $build['#attached']['css'][] = drupal_get_path('module', 'quicktabs') . '/css/quicktabs-admin.css';
-  $build['#attached']['js'][] = drupal_get_path('module', 'quicktabs') . '/js/quicktabs_form.js';
+  $build['#attached']['css'][] = backdrop_get_path('module', 'quicktabs') . '/css/quicktabs-admin.css';
+  $build['#attached']['js'][] = backdrop_get_path('module', 'quicktabs') . '/js/quicktabs_form.js';
 
-  $output = drupal_render($build);
+  $output = backdrop_render($build);
   return $output;
 }
 
@@ -491,12 +488,12 @@ function quicktabs_form_submit($form, &$form_state) {
     $exists = quicktabs_load($qt->machine_name);
     if ($exists && empty($exists->in_code_only)) {
       if (quicktabs_update($qt)) {
-        drupal_set_message(t('The Quicktabs instance has been updated.'));
+        backdrop_set_message(t('The Quicktabs instance has been updated.'));
       }
     }
     else {
       if (quicktabs_save($qt)) {
-        drupal_set_message(t('The Quicktabs instance has been created.'));
+        backdrop_set_message(t('The Quicktabs instance has been created.'));
       }
     }
     $form_state['redirect'] = 'admin/structure/quicktabs';
@@ -517,7 +514,7 @@ function quicktabs_block_delete($form, $form_state, $qt) {
  */
 function quicktabs_block_delete_submit($form, &$form_state) {
   quicktabs_delete($form_state['values']['machine_name']);
-  drupal_set_message(t('The Quicktabs instance %name has been removed.', array('%name' => $form_state['values']['title'])));
+  backdrop_set_message(t('The Quicktabs instance %name has been removed.', array('%name' => $form_state['values']['title'])));
   cache_clear_all();
   $form_state['redirect'] = 'admin/structure/quicktabs';
 };
@@ -552,16 +549,23 @@ function quicktabs_export_form($form, &$form_state, $qt) {
  * Helper function to get all blocks.
  */
 function quicktabs_get_blocks() {
-  $blocksarray = &drupal_static(__FUNCTION__, array());
-  if (empty($blocksarray)) {
-    $blocks = _block_rehash();
-    $blocksarray = array();
-    foreach ($blocks as $block) {
-      if ($block['module'] != 'quicktabs') {
-        $key = $block['module'] . '_delta_' . $block['delta'];
-        $blocksarray[$key] = $block['info'] . ' (' . $block['module'] . ':' . $block['delta'] . ')';
-      }
-    }
+  //$blocksarray = &backdrop_static(__FUNCTION__, array());
+  // if (empty($blocksarray)) {
+  //   $blocks = _block_rehash();
+  //   $blocksarray = array();
+  //   foreach ($blocks as $block) {
+  //     if ($block['module'] != 'quicktabs') {
+  //       $key = $block['module'] . '_delta_' . $block['delta'];
+  //       $blocksarray[$key] = $block['info'] . ' (' . $block['module'] . ':' . $block['delta'] . ')';
+  //     }
+  //   }
+  // }
+
+  $config_names = config_get_names_with_prefix('block.custom.');
+  foreach ($config_names as $config_name) {
+    $config = config($config_name);
+    $key = $config->get('info') . '_delta_' . $config->get('delta');
+    $blocksarray[$key] = $config->get('info') . ' (' . $config->get('delta') . ')';
   }
   return $blocksarray;
 }
@@ -577,7 +581,7 @@ function _quicktabs_replace_view_displays_callback($form, $form_state) {
 
   $commands = array();
   // Replace the view display dropdown.
-  $commands[] = ajax_command_replace("#view-display-dropdown-$delta", drupal_render($form['qt_wrapper']['tabs'][$delta]['view']['display']));
+  $commands[] = ajax_command_replace("#view-display-dropdown-$delta", backdrop_render($form['qt_wrapper']['tabs'][$delta]['view']['display']));
   return array('#type' => 'ajax', '#commands' => $commands);
 }
 

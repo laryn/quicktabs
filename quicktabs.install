@@ -11,18 +11,6 @@
 function quicktabs_schema() {
   $schema['quicktabs'] = array(
     'description' => 'The quicktabs table.',
-    'export' => array(
-      'key' => 'machine_name',
-      'identifier' => 'quicktabs',
-      'default hook' => 'quicktabs_default_quicktabs',
-      'api' => array(
-        'owner' => 'quicktabs',
-        'api' => 'quicktabs',
-        'minimum_version' => 1,
-        'current_version' => 1,
-      ),
-      'export callback' => 'quicktabs_export',
-    ),
     'fields' => array(
       'machine_name' => array(
         'description' => 'The primary identifier for a qt block.',
@@ -90,123 +78,41 @@ function quicktabs_schema() {
   return $schema;
 }
 
-
 /**
- * Update to 7.x-3.x
+ * Implements hook_update_last_removed().
  */
-function quicktabs_update_7300() {
-
-  $output = array();
-
-  if (!db_field_exists('quicktabs', 'renderer')) {
-    // Add the renderer field
-    $renderer_field = array(
-      'description' => 'The rendering mechanism.',
-      'type' => 'varchar',
-      'length' => 255,
-      'not null' => TRUE,
-      'default' => 'quicktabs',
-    );
-    db_add_field('quicktabs', 'renderer', $renderer_field);
-    $output[] = "Added the renderer field";
-  }
-
-  if (!db_field_exists('quicktabs', 'machine_name')) {
-    // Pull all existing quicktabs, and then delete existing quicktabs. We will reinsert.
-    $result = db_query("SELECT * FROM {quicktabs}");
-    if (!db_query("DELETE FROM {quicktabs}")) {
-      throw new DrupalUpdateException(t('Could not complete the update.'));
-    }
-  
-    db_drop_field('quicktabs', 'qtid');
-    $name_field = array(
-      'description' => 'The primary identifier for a qt block.',
-      'type' => 'varchar',
-      'length' => 255,
-      'not null' => TRUE,
-    );
-    db_add_field('quicktabs', 'machine_name', $name_field);
-    db_add_primary_key('quicktabs', array('machine_name'));
-  
-    $used = array();
-    foreach ($result as $qt) {
-      $row = (array)$qt;
-      // Generate a machine-readable string
-      $qt_name = strtolower(preg_replace('/[^a-zA-Z0-9_]+/', '_', $row['title']));
-      $i = 0;
-      while (in_array($i == 0 ? $qt_name : "{$qt_name}_{$i}", $used)) {
-        $i++;
-      }
-      $row['machine_name'] = $used[] = $i == 0 ? $qt_name : "{$qt_name}_{$i}";
-      unset($row['qtid']);
-      $row['style'] = '';
-      $row['renderer'] = 'tabs';
-      $placeholders = implode(', ', array_keys($row));
-      $values = array();
-      // Ugh - really?? Somebody tell me there's a better way to do this :-/
-      foreach ($row as $name => $value) {
-        $values[':' . $name] = $value;
-      }
-      $tokens = implode(', ', array_keys($values));
-      db_query("INSERT INTO {quicktabs} ($placeholders) VALUES($tokens)", $values);
-  
-      $output[] = "Converted quicktab {$row['machine_name']}.";
-    }
-  }
-
-  return implode('<br />', $output);
+function quicktabs_update_last_removed() {
+  return 7303;
 }
 
-/**
- * Add the options field which will hold renderer-specific options.
- */
-function quicktabs_update_7301() {
-  $options_field = array(
-    'description' => 'A serialized array of the options for this qt instance.',
-    'type' => 'text',
-    'size' => 'medium',
-    'not null' => FALSE,
-    'serialize' => TRUE,
-  );
-  db_add_field('quicktabs', 'options', $options_field);
-  return "Added the options field";
-}
+// @todo quicktabs_tabstyles has one setting: default
+// should be in the submodule but it gets called in the parent.
 
 /**
- * Rebuild the registry because of changed method name.
+ * Convert quicktabs config to CMI.
  */
-function quicktabs_update_7302() {
-  registry_rebuild();
-}
+function quicktabs_update_1000() {
+  if (db_table_exists('quicktabs')) {
+    $quicktabs = db_select('quicktabs', 'qt')
+      ->fields('qt')
+      ->execute()
+      ->fetchAllAssoc('machine_name');
 
-/**
- * Add support for view modes.
- */
-function quicktabs_update_7303() {
-  foreach (quicktabs_load_multiple() as $quicktab) {
-    $updated = FALSE;
-
-    foreach ($quicktab->tabs as &$tab) {
-      if ($tab['type'] === 'node') {
-        $tab['view_mode'] = !empty($tab['teaser']) ? 'teaser' : 'full';
-        unset($tab['teaser']);
-        $updated = TRUE;
+    foreach($quicktabs as $quicktab) {
+      $config = config('quicktabs.quicktab.' . $quicktab->machine_name);
+      if ($config->isNew()) {
+        $config->set('machine_name', $quicktab->machine_name);
+        $config->set('title', $quicktab->title);
+        $config->set('ajax', $quicktab->ajax);
+        $config->set('hide_empty_tabs', $quicktab->hide_empty_tabs);
+        $config->set('default_tab', $quicktab->default_tab);
+        $config->set('tabs', unserialize($quicktab->tabs));
+        $config->set('renderer', $quicktab->renderer);
+        $config->set('style', $quicktab->style);
+        $config->set('options', unserialize($quicktab->options));
+        $config->save();
       }
     }
-
-    if (!$updated) {
-      continue;
-    }
-
-    if (empty($quicktab->in_code_only)) {
-      $result = drupal_write_record('quicktabs', $quicktab, 'machine_name');
-    }
-    else {
-      $result = drupal_write_record('quicktabs', $quicktab);
-    }
-    if (!$result) {
-      throw new DrupalUpdateException(t('Could not complete the update.'));
-    }
+    db_drop_table('quicktabs');
   }
-  return 'Added support for view modes.';
 }

@@ -139,11 +139,11 @@ class quicktabs_style_plugin extends views_plugin_style {
     $overrides = array('style' => $this->options['tab_style'], 'sorted' => TRUE);
     $quicktabs = quicktabs_build_quicktabs($qt_name, $overrides, $tabs);
 
-    $output = drupal_render($quicktabs);
+    $output = backdrop_render($quicktabs);
 
     // If doing a live preview, add the JavaScript directly to the output.
     if (isset($view->live_preview) && $view->live_preview) {
-      $js = drupal_add_js();
+      $js = backdrop_add_js();
       $qtsettings = array();
       foreach ($js['settings']['data'] as $settings) {
         if (isset($settings['quicktabs']['qt_'. $qt_name])) {
@@ -153,8 +153,8 @@ class quicktabs_style_plugin extends views_plugin_style {
       }
 
       $output .= "<script type=\"text/javascript\">\n";
-      $output .= "Drupal.settings.quicktabs = Drupal.settings.quicktabs || {};\n";
-      $output .= "jQuery.extend(Drupal.settings.quicktabs, ". json_encode(array('qt_'. $qt_name => $qtsettings)) .");\n";
+      $output .= "Backdrop.settings.quicktabs = Backdrop.settings.quicktabs || {};\n";
+      $output .= "jQuery.extend(Backdrop.settings.quicktabs, ". json_encode(array('qt_'. $qt_name => $qtsettings)) .");\n";
       $output .= "</script>\n";
     }
 

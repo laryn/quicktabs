@@ -23,19 +23,19 @@ class QuickQuicktabs extends QuickRenderer {
         '#theme' => 'qt_quicktabs',
         '#options' => array('attributes' => array(
           'id' => 'quicktabs-' . $qt_name,
-          'class' => 'quicktabs-wrapper quicktabs-style-' . drupal_html_class($settings['style']),
+          'class' => 'quicktabs-wrapper quicktabs-style-' . backdrop_html_class($settings['style']),
         )),
-        'tabs' => array('#theme' => 'qt_quicktabs_tabset', '#options' => array('active' => $active_tab, 'style' => drupal_html_class($settings['style'])), 'tablinks' => $tabs),
+        'tabs' => array('#theme' => 'qt_quicktabs_tabset', '#options' => array('active' => $active_tab, 'style' => backdrop_html_class($settings['style'])), 'tablinks' => $tabs),
         // The main content area, each quicktab container needs a unique id.
         'container' => array(
-          '#prefix' => '<div id="quicktabs-container-' . $qt_name .'" class="quicktabs_main quicktabs-style-' . drupal_html_class($settings['style']) .'">',
+          '#prefix' => '<div id="quicktabs-container-' . $qt_name .'" class="quicktabs_main quicktabs-style-' . backdrop_html_class($settings['style']) .'">',
           '#suffix' => '</div>',
           'divs' => array(),
         ),
       );
-      
 
-    
+
+
       // If in ajax mode, we'll only be rendering one tab, otherwise all of them.
       if ($settings['ajax']){
         // check in case of $active_tab=QUICKTABS_DELTA_NONE
@@ -43,7 +43,7 @@ class QuickQuicktabs extends QuickRenderer {
       }else{
         $tabs_to_render = $contents;
       }
-    
+
       foreach ($tabs_to_render as $key => $tab) {
         if (!empty($tab)) {
           $attribs = array(
@@ -51,7 +51,7 @@ class QuickQuicktabs extends QuickRenderer {
             'class' => array('quicktabs-tabpage', ($active_tab == $key ? '' : 'quicktabs-hide')),
           );
           $render_array['content']['container']['divs'][] = array(
-            '#prefix' => '<div '. drupal_attributes($attribs) .'>',
+            '#prefix' => '<div '. backdrop_attributes($attribs) .'>',
             '#suffix' => '</div>',
             'content' => $tab->render(),
           );
@@ -104,10 +104,10 @@ class QuickQuicktabs extends QuickRenderer {
   protected function add_attached() {
     $attached = array(
       'css' => array(
-        array('data' => drupal_get_path('module', 'quicktabs') .'/css/quicktabs.css'),
+        array('data' => backdrop_get_path('module', 'quicktabs') .'/css/quicktabs.css'),
       ),
       'js' => array(
-        array('data' => drupal_get_path('module', 'quicktabs') . '/js/quicktabs.js'),
+        array('data' => backdrop_get_path('module', 'quicktabs') . '/js/quicktabs.js'),
         array('data' => 'misc/progress.js', 'weight' => JS_LIBRARY),
       ),
     );
@@ -125,7 +125,7 @@ class QuickQuicktabs extends QuickRenderer {
       }
     }
     // Add our JS settings
-    $javascript = drupal_add_js();
+    $javascript = backdrop_add_js();
     if (isset($javascript['settings']['data'])) {
       foreach ($javascript['settings']['data'] as $key => $settings) {
         if (key($settings) == 'quicktabs') {
@@ -179,7 +179,7 @@ class QuickQuicktabs extends QuickRenderer {
     }
 
     // Need to construct the correct querystring for the tab links.
-    $query = drupal_get_query_parameters(NULL, array("qt-$qt_name", 'q', 'page'));
+    $query = backdrop_get_query_parameters(NULL, array("qt-$qt_name", 'q', 'page'));
     $query["qt-{$qt_name}"] = $tabkey;
 
     $link_options = array(

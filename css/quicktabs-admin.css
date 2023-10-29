@@ -62,18 +62,61 @@ html.js #qt-tablist-table .qt-tab-options-form {
 #qt-tablist-table .delete-tab {
   display: block;
   overflow: hidden;
-  width: 39px;
-  height: 23px;
+  width: 24px;
+  height: 24px;
   padding: 0;
-  margin: 0;
+  margin: .2em .1em;
   border: 0;
   text-indent: -9999px;
   cursor: pointer;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-size: contain;
+  opacity: 0.5;
 }
 
-#quicktabs-form .add-tab {
-  background: transparent url(../add-tab.gif) no-repeat 0 -3px;
+/* #quicktabs-form .add-tab {
+  background: transparent url(../images/add-tab.gif) no-repeat 0 -3px;
 }
 #quicktabs-form .delete-tab {
-  background: transparent url(../delete-tab.gif) no-repeat 0 0;
+  background: transparent url(../images/delete-tab.gif) no-repeat 0 0;
+} */
+
+/* #quicktabs-form .add-tab span,
+#quicktabs-form .delete-tab span {
+  display: none;
+}
+
+#quicktabs-form .add-tab,
+#quicktabs-form .delete-tab {
+  display: block;
+  width: 24px;
+  height: 24px;
+  margin: .2em .1em;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-size: contain;
+  opacity: 0.3;
+  float: left; */
+  /* LTR */
+/* }
+
+[dir="rtl"] #quicktabs-form .add-tab,
+[dir="rtl"] #quicktabs-form .delete-tab {
+  float: right;
+}
+
+#quicktabs-form .add-tab:hover,
+#quicktabs-form .delete-tab:hover {
+  opacity: 1;
+} */
+
+#quicktabs-form .add-tab {
+  /* Icon derived from Font Awesome, which is licensed under the SIL OFL 1.1 */
+  background-image: url(../images/plus-black-64.png);
+}
+
+#quicktabs-form .delete-tab {
+  /* Icon derived from Font Awesome, which is licensed under the SIL OFL 1.1 */
+  background-image: url(../images/minus-black-64.png);
 }

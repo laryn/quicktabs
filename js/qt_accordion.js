@@ -1,6 +1,6 @@
 (function ($) {
 
-Drupal.behaviors.qt_accordion = {
+Backdrop.behaviors.qt_accordion = {
   attach: function (context, settings) {
     $('.quick-accordion', context).once(function(){
       var id = $(this).attr('id');
@@ -11,7 +11,7 @@ Drupal.behaviors.qt_accordion = {
       if (settings.quicktabs[qtKey].history) {
         options.event = 'change';
         $(this).accordion(options);
-        Drupal.quicktabsBbq($(this), 'h3 a', 'h3');
+        Backdrop.quicktabsBbq($(this), 'h3 a', 'h3');
       }
       else {
         $(this).accordion(options);

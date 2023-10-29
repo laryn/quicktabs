@@ -4,13 +4,13 @@
 /**
  * @file Add Views module hooks to Quicktabs.
  */
- 
+
 /**
  * Implementation of hook_views_plugins().
  */
 function quicktabs_views_plugins() {
-  $path = drupal_get_path('module', 'quicktabs');
-  
+  $path = backdrop_get_path('module', 'quicktabs');
+
   return array(
     'style' => array(
       'quicktabs' => array(

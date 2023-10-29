@@ -40,7 +40,7 @@ class QuickUiTabs extends QuickRenderer {
           'id' => 'qt-'. $qt_name .'-ui-tabs' . ($key+1),
         );
         $render_array['content']['divs'][] = array(
-          '#prefix' => '<div '. drupal_attributes($attribs) .'>',
+          '#prefix' => '<div '. backdrop_attributes($attribs) .'>',
           '#suffix' => '</div>',
           'content' => $tab->render(),
         );
@@ -65,11 +65,11 @@ class QuickUiTabs extends QuickRenderer {
 	$href = '#qt-'. $qt_name .'-ui-tabs' . ($i+1);
         $quickset = $this->quickset;
         $attributes = array();
-        $attributes['class'][] = drupal_html_class($tab->getTitle());
-        drupal_alter('quicktabs_tablinks_attributes',$attributes,$quickset,$i);
+        $attributes['class'][] = backdrop_html_class($tab->getTitle());
+        backdrop_alter('quicktabs_tablinks_attributes',$attributes,$quickset,$i);
         $attributes['href'] = $href;
 	$tablink = array(
-	  '#markup' => '<a '. drupal_attributes($attributes) .'>'. check_plain($this->quickset->translateString($tab->getTitle(), 'tab', $i)) .'</a>',
+	  '#markup' => '<a '. backdrop_attributes($attributes) .'>'. check_plain($this->quickset->translateString($tab->getTitle(), 'tab', $i)) .'</a>',
 	);
 	$tabs[$i] = $tablink;
       }
@@ -91,11 +91,11 @@ class QuickUiTabs extends QuickRenderer {
 	array('system', 'jquery.bbq'),
       ),
       'js' => array(
-        array('data' => drupal_get_path('module', 'quicktabs') . '/js/qt_ui_tabs.js', 'weight' => JS_DEFAULT + 1),
+        array('data' => backdrop_get_path('module', 'quicktabs') . '/js/qt_ui_tabs.js', 'weight' => JS_DEFAULT + 1),
       ),
     );
 
-    $javascript = drupal_add_js();
+    $javascript = backdrop_add_js();
     if (isset($javascript['settings']['data'])) {
       foreach ($javascript['settings']['data'] as $key => $settings) {
         if (key($settings) == 'quicktabs') {
@@ -107,7 +107,7 @@ class QuickUiTabs extends QuickRenderer {
 
     if ($options['history']) {
       $attached['library'][] = array('system', 'jquery.bbq');
-      $attached['js'][] = array('data' => drupal_get_path('module', 'quicktabs') . '/js/quicktabs_bbq.js', 'weight' => JS_DEFAULT);
+      $attached['js'][] = array('data' => backdrop_get_path('module', 'quicktabs') . '/js/quicktabs_bbq.js', 'weight' => JS_DEFAULT);
     }
 
     $name = $this->quickset->getName();

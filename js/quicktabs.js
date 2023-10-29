@@ -1,25 +1,25 @@
 (function ($) {
-Drupal.settings.views = Drupal.settings.views || {'ajax_path': '/views/ajax'};
+Backdrop.settings.views = Backdrop.settings.views || {'ajax_path': '/views/ajax'};
 
-Drupal.quicktabs = Drupal.quicktabs || {};
+Backdrop.quicktabs = Backdrop.quicktabs || {};
 
-Drupal.quicktabs.getQTName = function (el) {
+Backdrop.quicktabs.getQTName = function (el) {
   return el.id.substring(el.id.indexOf('-') +1);
 }
 
-Drupal.behaviors.quicktabs = {
+Backdrop.behaviors.quicktabs = {
   attach: function (context, settings) {
-    $.extend(true, Drupal.settings, settings);
+    $.extend(true, Backdrop.settings, settings);
     $('.quicktabs-wrapper', context).once(function(){
-      Drupal.quicktabs.prepare(this);
+      Backdrop.quicktabs.prepare(this);
     });
   }
 }
 
 // Setting up the inital behaviours
-Drupal.quicktabs.prepare = function(el) {
+Backdrop.quicktabs.prepare = function(el) {
   // el.id format: "quicktabs-$name"
-  var qt_name = Drupal.quicktabs.getQTName(el);
+  var qt_name = Backdrop.quicktabs.getQTName(el);
   var $ul = $(el).find('ul.quicktabs-tabs:first');
 
   $("ul.quicktabs-tabs li a span#active-quicktabs-tab").remove();
@@ -28,17 +28,17 @@ Drupal.quicktabs.prepare = function(el) {
     element.myTabIndex = i;
     element.qt_name = qt_name;
 
-    var tab = new Drupal.quicktabs.tab(element);
+    var tab = new Backdrop.quicktabs.tab(element);
     var parent_li = $(element).parents('li').get(0);
     if ($(parent_li).hasClass('active')) {
       $(element).addClass('quicktabs-loaded');
-      $(element).append('<span id="active-quicktabs-tab" class="element-invisible">' + Drupal.t('(active tab)') + '</span>');
+      $(element).append('<span id="active-quicktabs-tab" class="element-invisible">' + Backdrop.t('(active tab)') + '</span>');
     }
-    $(element).once(function() {$(this).bind('click', {tab: tab}, Drupal.quicktabs.clickHandler);});
+    $(element).once(function() {$(this).bind('click', {tab: tab}, Backdrop.quicktabs.clickHandler);});
   });
 }
 
-Drupal.quicktabs.clickHandler = function(event) {
+Backdrop.quicktabs.clickHandler = function(event) {
   var tab = event.data.tab;
   var element = this;
   // Set clicked tab to active.
@@ -46,13 +46,13 @@ Drupal.quicktabs.clickHandler = function(event) {
   $(this).parents('li').addClass('active');
 
   $("ul.quicktabs-tabs li a span#active-quicktabs-tab").remove();
-  $(this).append('<span id="active-quicktabs-tab" class="element-invisible">' + Drupal.t('(active tab)') + '</span>');
+  $(this).append('<span id="active-quicktabs-tab" class="element-invisible">' + Backdrop.t('(active tab)') + '</span>');
 
   // Hide all tabpages.
   tab.container.children().addClass('quicktabs-hide');
-  
+
   if (!tab.tabpage.hasClass("quicktabs-tabpage")) {
-    tab = new Drupal.quicktabs.tab(element);
+    tab = new Backdrop.quicktabs.tab(element);
   }
 
   tab.tabpage.removeClass('quicktabs-hide');
@@ -61,14 +61,14 @@ Drupal.quicktabs.clickHandler = function(event) {
 }
 
 // Constructor for an individual tab
-Drupal.quicktabs.tab = function (el) {
+Backdrop.quicktabs.tab = function (el) {
   this.element = el;
   this.tabIndex = el.myTabIndex;
   var qtKey = 'qt_' + el.qt_name;
   var i = 0;
-  for (var key in Drupal.settings.quicktabs[qtKey].tabs) {
+  for (var key in Backdrop.settings.quicktabs[qtKey].tabs) {
     if (i == this.tabIndex) {
-      this.tabObj = Drupal.settings.quicktabs[qtKey].tabs[key];
+      this.tabObj = Backdrop.settings.quicktabs[qtKey].tabs[key];
       this.tabKey = key;
     }
     i++;
@@ -78,7 +78,7 @@ Drupal.quicktabs.tab = function (el) {
   this.tabpage = this.container.find('#' + this.tabpage_id);
 }
 
-if (Drupal.ajax) {
+if (Backdrop.ajax) {
   /**
    * Handle an event that triggers an AJAX response.
    *
@@ -90,19 +90,19 @@ if (Drupal.ajax) {
    * the only comments inside this function relate to the Quicktabs modification
    * of it.
    */
-  Drupal.ajax.prototype.eventResponse = function (element, event) {
+  Backdrop.ajax.prototype.eventResponse = function (element, event) {
     var ajax = this;
 
     if (ajax.ajaxing) {
       return false;
     }
-  
+
     try {
       if (ajax.form) {
         if (ajax.setClick) {
           element.form.clk = element;
         }
-  
+
         ajax.form.ajaxSubmit(ajax.options);
       }
       else {

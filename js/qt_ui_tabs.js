@@ -1,6 +1,6 @@
 (function ($) {
 
-Drupal.behaviors.qt_ui_tabs = {
+Backdrop.behaviors.qt_ui_tabs = {
   attach: function (context, settings) {
 
     $('.quicktabs-ui-wrapper').once('qt-ui-tabs-processed', function() {
@@ -11,7 +11,7 @@ Drupal.behaviors.qt_ui_tabs = {
       }
       else {
         $(this).tabs({event: 'change'});
-        Drupal.quicktabsBbq($(this), 'ul.ui-tabs-nav a');
+        Backdrop.quicktabsBbq($(this), 'ul.ui-tabs-nav a');
       }
     });
 
