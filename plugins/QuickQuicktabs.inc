@@ -34,8 +34,6 @@ class QuickQuicktabs extends QuickRenderer {
         ),
       );
 
-
-
       // If in ajax mode, we'll only be rendering one tab, otherwise all of them.
       if ($settings['ajax']){
         // check in case of $active_tab=QUICKTABS_DELTA_NONE
@@ -108,7 +106,7 @@ class QuickQuicktabs extends QuickRenderer {
       ),
       'js' => array(
         array('data' => backdrop_get_path('module', 'quicktabs') . '/js/quicktabs.js'),
-        array('data' => 'misc/progress.js', 'weight' => JS_LIBRARY),
+        array('data' => 'core/misc/progress.js', 'weight' => JS_LIBRARY),
       ),
     );
     $settings = $this->quickset->getSettings();

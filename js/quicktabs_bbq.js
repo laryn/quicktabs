@@ -1,7 +1,7 @@
 /**
  * @file
  * Implements history using the BBQ plugin.
- * See http://benalman.com/code/projects/jquery-bbq/examples/fragment-jquery-ui-tabs
+ * See https://github.com/cowboy/jquery-bbq
  */
 (function($) {
 

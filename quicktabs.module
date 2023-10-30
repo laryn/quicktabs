@@ -171,6 +171,27 @@ function quicktabs_block_view($delta = '') {
 }
 
 /**
+ * Implements hook_library_info().
+ */
+function quicktabs_library_info() {
+  $module_path = backdrop_get_path('module', 'quicktabs');
+
+  $libraries['jquery.bbq'] = array(
+    'title' => 'Enables bookmarkable #hash history.',
+    'website' => 'https://github.com/cowboy/jquery-bbq',
+    'version' => BACKDROP_VERSION,
+    'js' => array(
+      $module_path . '/js/jquery.ba-bbq.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+    ),
+  );
+
+  return $libraries;
+}
+
+/**
  * Constructs a Quicktabs instance.
  *
  * This function can be called by other modules to programmatically build a

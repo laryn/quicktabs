@@ -92,7 +92,7 @@ class QuickAccordion extends QuickRenderer {
     }
 
     if ($options['history']) {
-      $attached['library'][] = array('system', 'jquery.bbq');
+      $attached['library'][] = array('quicktabs', 'jquery.bbq');
       $attached['js'][] = array('data' => backdrop_get_path('module', 'quicktabs') . '/js/quicktabs_bbq.js');
     }
 

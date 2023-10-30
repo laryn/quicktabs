@@ -49,7 +49,6 @@ class QuickUiTabs extends QuickRenderer {
     return $render_array;
   }
 
-
   /**
    * Build the actual tab links, with appropriate href, title and attributes.
    *
@@ -60,18 +59,18 @@ class QuickUiTabs extends QuickRenderer {
     $qt_name = $this->quickset->getName();
     foreach ($this->quickset->getContents() as $i => $tab) {
       if (!empty($tab)) {
-	// If we use l() here or a render array of type 'link', the '#' symbol will
-	// be escaped. Sad panda is sad.
-	$href = '#qt-'. $qt_name .'-ui-tabs' . ($i+1);
+        // If we use l() here or a render array of type 'link', the '#' symbol will
+        // be escaped. Sad panda is sad.
+        $href = '#qt-'. $qt_name .'-ui-tabs' . ($i+1);
         $quickset = $this->quickset;
         $attributes = array();
         $attributes['class'][] = backdrop_html_class($tab->getTitle());
         backdrop_alter('quicktabs_tablinks_attributes', $attributes, $quickset, $i);
         $attributes['href'] = $href;
-	$tablink = array(
-	  '#markup' => '<a '. backdrop_attributes($attributes) .'>'. check_plain($this->quickset->translateString($tab->getTitle(), 'tab', $i)) .'</a>',
-	);
-	$tabs[$i] = $tablink;
+        $tablink = array(
+          '#markup' => '<a '. backdrop_attributes($attributes) .'>'. check_plain($this->quickset->translateString($tab->getTitle(), 'tab', $i)) .'</a>',
+        );
+        $tabs[$i] = $tablink;
       }
     }
     return $tabs;
@@ -88,7 +87,7 @@ class QuickUiTabs extends QuickRenderer {
     $attached = array(
       'library' => array(
         array('system', 'ui.tabs'),
-	array('system', 'jquery.bbq'),
+        array('quicktabs', 'jquery.bbq'),
       ),
       'js' => array(
         array('data' => backdrop_get_path('module', 'quicktabs') . '/js/qt_ui_tabs.js', 'weight' => JS_DEFAULT + 1),
@@ -106,7 +105,7 @@ class QuickUiTabs extends QuickRenderer {
     }
 
     if ($options['history']) {
-      $attached['library'][] = array('system', 'jquery.bbq');
+      $attached['library'][] = array('quicktabs', 'jquery.bbq');
       $attached['js'][] = array('data' => backdrop_get_path('module', 'quicktabs') . '/js/quicktabs_bbq.js', 'weight' => JS_DEFAULT);
     }
 
