@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 
-.quicktabs-wrapper.quicktabs-style-pills-vertical .item-list {
+.quicktabs-wrapper.quicktabs-style-pills-vertical>.item-list {
   flex: 0 0 auto;
   width: 25%;
   max-width: 100%;
@@ -17,7 +17,7 @@
   margin-top: 0;
 }
 
-.quicktabs_main.quicktabs-style-pills-vertical .quicktabs-tabpage {
+.quicktabs_main.quicktabs-style-pills-vertical>.quicktabs-tabpage {
   padding-right: calc(1.5rem * 0.5);
   padding-left: calc(1.5rem * 0.5);
 }
