@@ -139,7 +139,7 @@ class QuickSet {
     $this->prepareContents();
     // Set the default style if necessary.
     if ($this->settings['style'] == 'default') {
-      $this->settings['style'] = variable_get('quicktabs_tabstyle', 'nostyle');
+      $this->settings['style'] = config_get('quicktabs.settings', 'tabstyle');
     }
   }
 

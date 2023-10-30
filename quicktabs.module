@@ -149,6 +149,7 @@ function quicktabs_block_info() {
   $blocks = array();
   foreach (quicktabs_load_multiple() as $qt_name => $quicktabs) {
     $blocks[$qt_name]['info'] = $quicktabs->title;
+    $blocks[$qt_name]['description'] = t('A Quicktabs block.');
     $blocks[$qt_name]['cache'] = BACKDROP_NO_CACHE;
   }
   return $blocks;
@@ -295,7 +296,7 @@ function quicktabs_ajax($name, $index, $type) {
  */
 function quicktabs_load($name) {
   $config = config('quicktabs.quicktab.' . $name);
-  return (object) $config->getData();
+  return (!$config->isNew()) ? (object) $config->getData() : NULL;
 }
 
 /**
@@ -540,7 +541,7 @@ function theme_quicktabs_tab_access_denied($variables) {
 function quicktabs_get_css($style) {
   if ($style == 'default') {
     // Get the default style.
-    $style = variable_get('quicktabs_tabstyle', 'nostyle');
+    $style = config_get('quicktabs.settings', 'tabstyle');
   }
   if ($style == 'nostyle') return array();
   $style_css = _quicktabs_get_style_css($style);

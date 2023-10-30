@@ -85,13 +85,22 @@ function quicktabs_update_last_removed() {
   return 7303;
 }
 
-// @todo quicktabs_tabstyles has one setting: default
-// should be in the submodule but it gets called in the parent.
-
 /**
- * Convert quicktabs config to CMI.
+ * Convert variables to CMI.
  */
 function quicktabs_update_1000() {
+  $config = config('quicktabs.settings');
+  $config->set('tabstyle', update_variable_get('quicktabs_tabstyle', 'nostyle'));
+  $config->save();
+
+  // Delete variables.
+  update_variable_del('quicktabs_tabstyle');
+}
+
+/**
+ * Convert quicktabs table to CMI.
+ */
+function quicktabs_update_1001() {
   if (db_table_exists('quicktabs')) {
     $quicktabs = db_select('quicktabs', 'qt')
       ->fields('qt')

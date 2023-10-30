@@ -66,7 +66,7 @@ class QuickUiTabs extends QuickRenderer {
         $quickset = $this->quickset;
         $attributes = array();
         $attributes['class'][] = backdrop_html_class($tab->getTitle());
-        backdrop_alter('quicktabs_tablinks_attributes',$attributes,$quickset,$i);
+        backdrop_alter('quicktabs_tablinks_attributes', $attributes, $quickset, $i);
         $attributes['href'] = $href;
 	$tablink = array(
 	  '#markup' => '<a '. backdrop_attributes($attributes) .'>'. check_plain($this->quickset->translateString($tab->getTitle(), 'tab', $i)) .'</a>',

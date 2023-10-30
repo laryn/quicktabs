@@ -50,7 +50,7 @@ class QuickAccordion extends QuickRenderer {
       if (!empty($item)) {
         $attributes = array();
         $attributes['class'][] = backdrop_html_class($item->getTitle());
-        backdrop_alter('quicktabs_tablinks_attributes',$attributes,$quickset,$key);
+        backdrop_alter('quicktabs_tablinks_attributes', $attributes, $quickset, $key);
         $attributes['href'] = '#'. $qsid . '_' . $key ;
         $render_array['content']['divs'][] = array(
           '#prefix' => '<h3><a '. backdrop_attributes($attributes) .'>'. check_plain($quickset->translateString($item->getTitle(), 'tab', $key)) .'</a></h3><div>',
