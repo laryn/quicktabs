@@ -40,12 +40,20 @@ class QuickNodeContent extends QuickContent {
       '#title' => t('View mode'),
       '#options' => $view_modes,
       '#default_value' => isset($tab['view_mode']) ? $tab['view_mode'] : 'full',
-     );
-     $form['node']['hide_title'] = array(
+    );
+    $form['node']['hide_title'] = array(
       '#type' => 'checkbox',
       '#title' => t('Hide the title of this node'),
       '#default_value' => isset($tab['hide_title']) ? $tab['hide_title'] : 1,
     );
+    if (module_exists('translation')) {
+      $form['node']['translate'] = array(
+        '#type' => 'checkbox',
+        '#default_value' => !empty($tab['translate']),
+        '#title' => t('Load translated version of the content if available'),
+      );
+    }
+
     return $form;
   }
 
@@ -67,6 +75,12 @@ class QuickNodeContent extends QuickContent {
       if (!empty($node)) {
         if (node_access('view', $node)) {
           $buildmode = $item['view_mode'];
+          // Look for and load translated node if translations are available.
+          if (module_exists('translation') && !empty($item['translate'])) {
+            $node = $this->loadTranslatedNode();
+          } else {
+            $node = node_load($item['nid']);
+          }
           $nstruct = node_view($node, $buildmode);
           if ($item['hide_title']) {
             $nstruct['#node']->title = NULL;
@@ -87,5 +101,29 @@ class QuickNodeContent extends QuickContent {
 
   public function getUniqueKeys() {
     return array('nid');
+  }
+
+  /**
+   * Load translated node
+   *
+   * @return Node
+   *   The Node object.
+   */
+  protected function loadTranslatedNode() {
+    global $language;
+
+    $node = node_load($this->settings['nid']);
+
+    if (!empty($node->tnid) && !empty($node->langcode)) {
+      $translations = translation_node_get_translations($node->tnid);
+
+      foreach ($translations as $code => $translation) {
+        if ($code == $language->langcode) {
+          return node_load($translation->nid);
+        }
+      }
+    }
+
+    return $node;
   }
 }
