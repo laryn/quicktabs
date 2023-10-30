@@ -1,0 +1,63 @@
+.quicktabs-wrapper.quicktabs-style-pills-vertical {
+  display: flex;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+}
+
+.quicktabs-wrapper.quicktabs-style-pills-vertical .item-list {
+  flex: 0 0 auto;
+  width: 25%;
+  max-width: 100%;
+  margin-top: 0;
+}
+.quicktabs_main.quicktabs-style-pills-vertical {
+  flex: 0 0 auto;
+  width: 75%;
+  max-width: 100%;
+  margin-top: 0;
+}
+
+.quicktabs_main.quicktabs-style-pills-vertical .quicktabs-tabpage {
+  padding-right: calc(1.5rem * 0.5);
+  padding-left: calc(1.5rem * 0.5);
+}
+
+ul.quicktabs-tabs.quicktabs-style-pills-vertical {
+  display: flex;
+  flex-wrap: wrap;
+  padding-left: 0;
+  list-style: none;
+  margin-left: 0;
+  padding-right: calc(1.5rem * 0.5);
+  padding-left: calc(1.5rem * 0.5);
+  flex-direction: column;
+}
+
+ul.quicktabs-tabs.quicktabs-style-pills-vertical a {
+  display: block;
+  padding: 0.5rem 1rem;
+  color: #0073bd;
+  text-decoration: none;
+  background: 0 0;
+  border: 0;
+  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out;
+  margin-bottom: calc(-1 * 1px);
+  border: 1px solid transparent;
+  border-radius: 0.375rem;
+}
+
+ul.quicktabs-tabs.quicktabs-style-pills-vertical a:hover,
+ul.quicktabs-tabs.quicktabs-style-pills-vertical a:focus {
+  color: #114a75;
+}
+
+ul.quicktabs-tabs.quicktabs-style-pills-vertical li {
+  margin: 0;
+  padding: 0;
+}
+
+ul.quicktabs-tabs.quicktabs-style-pills-vertical li.active a {
+  color: #fff;
+  background-color: #0073bd;
+}
+

@@ -2,12 +2,9 @@
 
 div.quicktabs-preview {
   border: none;
-  width: 250px;
-  height: 80px;
 }
 
 #quicktabs-styles .quicktabs-tabstyles .form-item {
-  width: 280px;
   float: left;
   margin: 0 10px 10px 0;
   border: 1px solid #ccc;
@@ -32,6 +29,5 @@ div.quicktabs-preview {
 }
 #quicktabs-styles .quicktabs_wrapper {
   margin: 5px;
-  font: bold 12px/170% Verdana;
 }
 

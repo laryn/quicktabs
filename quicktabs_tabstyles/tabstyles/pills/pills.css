@@ -1,0 +1,37 @@
+.quicktabs_main.quicktabs-style-pills {}
+
+ul.quicktabs-tabs.quicktabs-style-pills {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  padding-left: 0;
+  list-style: none;
+}
+
+ul.quicktabs-tabs.quicktabs-style-pills a {
+  display: block;
+  padding: 0.5rem 1rem;
+  color: #0073bd;
+  text-decoration: none;
+  background: 0 0;
+  border: 0;
+  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out;
+  margin-bottom: calc(-1 * 1px);
+  border: 1px solid transparent;
+  border-radius: 0.375rem;
+}
+
+ul.quicktabs-tabs.quicktabs-style-pills a:hover,
+ul.quicktabs-tabs.quicktabs-style-pills a:focus {
+  color: #114a75;
+}
+
+ul.quicktabs-tabs.quicktabs-style-pills li {
+  margin: 0;
+  padding: 0;
+}
+
+ul.quicktabs-tabs.quicktabs-style-pills li.active a {
+  color: #fff;
+  background-color: #0073bd;
+}

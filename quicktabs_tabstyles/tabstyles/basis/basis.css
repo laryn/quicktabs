@@ -1,0 +1,159 @@
+.quicktabs-wrapper.quicktabs-style-basis {
+  position: relative;
+  padding: 0.75em 0.5em 0;
+}
+.quicktabs-wrapper.quicktabs-style-basis:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 3.1875em;
+  transform: translate(-50%, 0);
+}
+.quicktabs-wrapper.quicktabs-style-basis:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+ul.quicktabs-tabs.quicktabs-style-basis {
+  position: relative;
+  clear: both;
+  box-sizing: border-box;
+  border: none;
+  width: 100%;
+  float: left;
+  /* LTR */
+  margin: 0 0 1em;
+  padding: 0 0 0 0.5em;
+  font-size: 0.9375em;
+  text-transform: uppercase;
+}
+[dir="rtl"] ul.quicktabs-tabs.quicktabs-style-basis {
+  float: right;
+}
+ul.quicktabs-tabs.quicktabs-style-basis li {
+  position: relative;
+  z-index: 1;
+  float: left; /* LTR */
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+[dir="rtl"] ul.quicktabs-tabs.quicktabs-style-basis li {
+  float: right;
+}
+ul.quicktabs-tabs.quicktabs-style-basis li a,
+ul.quicktabs-tabs.quicktabs-style-basis li a:visited,
+ul.quicktabs-tabs.quicktabs-style-basis li a:hover,
+ul.quicktabs-tabs.quicktabs-style-basis li.active a {
+  position: relative;
+  z-index: 1;
+  display: block;
+  padding: 12px 20px;
+  text-decoration: none;
+  border: 0;
+  border-right: 0.125rem solid #586172;
+  /* LTR */
+  overflow: visible;
+  line-height: 1;
+  font-weight: normal;
+  transition:
+    background-color 0.5s ease 0s,
+    color 0.5s ease 0s;
+  will-change: background-color, color;
+}
+
+[dir="rtl"] ul.quicktabs-tabs.quicktabs-style-basis li a,
+[dir="rtl"] ul.quicktabs-tabs.quicktabs-style-basis li a.active,
+[dir="rtl"] ul.quicktabs-tabs.quicktabs-style-basis li a:active,
+[dir="rtl"] ul.quicktabs-tabs.quicktabs-style-basis li a:visited,
+[dir="rtl"] ul.quicktabs-tabs.quicktabs-style-basis li a:hover,
+[dir="rtl"] ul.quicktabs-tabs.quicktabs-style-basis li.active a {
+  border-right: 0;
+  border-left-width: 0.125rem;
+  border-left-style: solid;
+}
+
+ul.quicktabs-tabs.quicktabs-style-basis li:first-child a {
+  -webkit-border-radius: 4px 0 0 0;
+  -moz-border-radius: 4px 0 0 0;
+  border-radius: 4px 0 0 0;
+}
+
+ul.quicktabs-tabs.quicktabs-style-basis li:last-child a {
+  -webkit-border-radius: 0 4px 0 0;
+  -moz-border-radius: 0 4px 0 0;
+  border-radius: 0 4px 0 0;
+  border-right: 0;
+}
+
+[dir="rtl"] ul.quicktabs-tabs.quicktabs-style-basis li:first-child a {
+  -webkit-border-radius: 0 4px 0 0;
+  -moz-border-radius: 0 4px 0 0;
+  border-radius: 0 4px 0 0;
+}
+
+[dir="rtl"] ul.quicktabs-tabs.quicktabs-style-basis li:last-child a {
+  -webkit-border-radius: 4px 0 0 0;
+  -moz-border-radius: 4px 0 0 0;
+  border-radius: 4px 0 0 0;
+  border-right: 0;
+}
+
+@media (max-width: 34em) {
+  ul.quicktabs-tabs.quicktabs-style-basis li {
+    float: none;
+    margin-bottom: 2px;
+  }
+
+  .js ul.quicktabs-tabs.quicktabs-style-basis li {
+    float: left;
+  }
+}
+
+/**
+ * Default skin
+ */
+.quicktabs-wrapper.quicktabs-style-basis:before {
+  /* Background behind primary tabs */
+  background-color: #586172;
+}
+
+ul.quicktabs-tabs.quicktabs-style-basis {
+  font-size: 0.9375em;
+  text-transform: uppercase;
+}
+
+ul.quicktabs-tabs.quicktabs-style-basis li a,
+ul.quicktabs-tabs.quicktabs-style-basis li a:visited,
+ul.quicktabs-tabs.quicktabs-style-basis li a:hover,
+ul.quicktabs-tabs.quicktabs-style-basis li.active a {
+  border-color: #586172;
+  /* Should be color of bg behind tabs */
+  color: #010000;
+  background-color: #dee2ea;
+}
+
+ul.quicktabs-tabs.quicktabs-style-basis li.active a,
+ul.quicktabs-tabs.quicktabs-style-basis li.active a.active,
+ul.quicktabs-tabs.quicktabs-style-basis li.active a:active,
+ul.quicktabs-tabs.quicktabs-style-basis li.active a:visited {
+  color: #000001;
+  background-color: #ffffff;
+  font-weight: bold;
+}
+
+ul.quicktabs-tabs.quicktabs-style-basis li a:hover,
+ul.quicktabs-tabs.quicktabs-style-basis li a:focus {
+  color: #000001;
+  background: #d5d5d5;
+}
+
+ul.quicktabs-tabs.quicktabs-style-basis li a:active,
+.expand-dropdown-tabs-control:active {
+  background: #dee2ea;
+  box-shadow: inset 0 0 0 0.125em #d5d5d5;
+}
