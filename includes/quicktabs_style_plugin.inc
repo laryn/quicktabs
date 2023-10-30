@@ -81,7 +81,7 @@ class quicktabs_style_plugin extends views_plugin_style {
   // Override the render functionality.
   function render() {
     if (empty($this->row_plugin)) {
-      vpr('views_plugin_style_default: Missing row plugin');
+      watchdog('views', 'views_plugin_style_default: Missing row plugin', WATCHDOG_WARNING);
       return;
     }
 

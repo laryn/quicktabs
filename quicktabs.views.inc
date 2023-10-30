@@ -18,7 +18,7 @@ function quicktabs_views_plugins() {
         'help' => t('Display view in Quicktabs.'),
         'handler' => 'quicktabs_style_plugin',
         'path' => "$path/includes",
-        'theme' => 'quicktabs_view',
+        //'theme' => 'quicktabs_view',
         'uses row plugin' => TRUE,
         'uses options' => TRUE,
         'type' => 'normal',
