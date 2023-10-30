@@ -32,7 +32,7 @@ Install this module using the official Backdrop CMS instructions at
 11. Control the style of individual Quicktabs instances by editing the instance in
 question and selecting from the style dropdown.
 
-## Note
+## Note on ajax
 
 Because Quicktabs allows your tabbed content to be pulled via ajax, it has its
 own menu callback for getting this content and returning it in JSON format. For
@@ -43,7 +43,16 @@ it will return a JSON text string of the node information. If there are certain
 fields in ANY of your nodes that are supposed to be private, these MUST be
 controlled at `admin/content/node-type/MY_NODE_TYPE/display` by setting them to
 be excluded on teaser and node view. Setting them as private through some other
-mechanism, e.g. Panels, will not affect their being displayed in an ajax Quicktab.
+mechanism will not affect their being displayed in an ajax Quicktab.
+
+## Note on robots.txt
+
+Because Quicktabs provides urls for each tab in a Quicktabs instance (these are
+used both for graceful degradation without javascript, and for the ability to
+link to a page with a Quicktabs instance and specify which tab should be active),
+you may have a problem with the number of URLs being indexed by search engines
+for your site. There is a [blog post](http://2bits.com/bing/how-google-and-bing-crawlers-was-confused-quicktabs.html)
+about this problem and how to deal with it.
 
 ## For Developers
 
@@ -94,3 +103,8 @@ Ported to Backdrop by [herbdool](https://github.com/herbdool).
 Drupal maintainers:
 
 * [Katherine Bailey](http://drupal.org/user/172987)
+* [shelane](https://www.drupal.org/u/shelane)
+* [palashvijay4o](https://www.drupal.org/u/palashvijay4o)
+* [ezra-g](https://www.drupal.org/u/ezra-g)
+* [jaydub](https://www.drupal.org/u/jaydub)
+* [joelpittet](https://www.drupal.org/u/joelpittet)
