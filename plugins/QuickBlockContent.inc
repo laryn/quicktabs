@@ -33,6 +33,7 @@ class QuickBlockContent extends QuickContent {
     }
     $output = array();
     $item = $this->settings;
+
     if (!empty($args)) {
       // The args have been passed in from an ajax request.
       $qt_name = array_shift($args);
@@ -65,22 +66,22 @@ class QuickBlockContent extends QuickContent {
         $pos = strpos($item['bid'], '_delta_');
         $module = backdrop_substr($item['bid'], 0, $pos);
         $delta = backdrop_substr($item['bid'], $pos + 7);
+        $block_config = config('block.custom.' . $delta);
 
         // Make sure the user can access the block.
         if ($this->accessBlock($module, $delta)) {
-
-          $block = block_load($module, $delta);
-          $block->region = 'quicktabs_tabpage';
-
-          if ($block_arr = _block_render_blocks(array($block))) {
-            if ($item['hide_title']) {
-              $block_arr["{$block->module}_{$block->delta}"]->subject = FALSE;
-            }
-            if (!empty($block_arr["{$block->module}_{$block->delta}"]->content)) {
-              $build = _block_get_renderable_array($block_arr);
-              $output = $build;
-            }
+          global $language;
+          if (language_multilingual() && !$language->default && $block_config->get('translations')) {
+            $title = (!$item['hide_title']) ? '<h3>' . $block_config->get('translations.' . $language->langcode . '.title') . '</h3>' : '';
+            $text = $block_config->get('translations.' . $language->langcode . '.body.value');
+            $format = $block_config->get('translations.' . $language->langcode . '.body.format');
           }
+          else {
+            $title = (!$item['hide_title']) ? '<h3>' . $block_config->get('title') . '</h3>' : '';
+            $text = $block_config->get('body.value');
+            $format = $block_config->get('body.format');
+          }
+          $output['#markup'] = $title . check_markup($text, $format);
         }
         elseif (!$hide_empty) {
           $output['#markup'] = theme('quicktabs_tab_access_denied', $item);
@@ -106,23 +107,10 @@ class QuickBlockContent extends QuickContent {
    * Checks if the current user can access a block.
    */
   private function accessBlock($module, $delta) {
-    // Get current user's rids.
-    global $user;
-    $rids = array_keys($user->roles);
-
-    // Get authorized rids.
-    $authorized_rids = db_select('block_role', 'br')
-      ->fields('br', array('rid'))
-      ->condition('module', $module, '=')
-      ->condition('delta',  $delta,  '=')
-      ->execute()
-      ->fetchCol('rid');
-
-    // Return whether the user can access the block:
-    // - Either all roles have access - no record in {block_role}
-    // - Or only specific roles have access - in which case rids should match.
-    return (count($authorized_rids) == 0)
-      || (count(array_intersect($authorized_rids, $rids)) != 0);
+    // Return whether the user can access the block.
+    // @todo For now, only custom blocks display and they don't have their
+    // own access control. Quicktabs would need its own access layer.
+    return TRUE;
   }
 }
 

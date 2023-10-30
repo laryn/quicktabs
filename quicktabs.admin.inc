@@ -549,23 +549,14 @@ function quicktabs_export_form($form, &$form_state, $qt) {
  * Helper function to get all blocks.
  */
 function quicktabs_get_blocks() {
-  //$blocksarray = &backdrop_static(__FUNCTION__, array());
-  // if (empty($blocksarray)) {
-  //   $blocks = _block_rehash();
-  //   $blocksarray = array();
-  //   foreach ($blocks as $block) {
-  //     if ($block['module'] != 'quicktabs') {
-  //       $key = $block['module'] . '_delta_' . $block['delta'];
-  //       $blocksarray[$key] = $block['info'] . ' (' . $block['module'] . ':' . $block['delta'] . ')';
-  //     }
-  //   }
-  // }
-
+  // @todo for now only support custom blocks.
   $config_names = config_get_names_with_prefix('block.custom.');
   foreach ($config_names as $config_name) {
     $config = config($config_name);
-    $key = $config->get('info') . '_delta_' . $config->get('delta');
-    $blocksarray[$key] = $config->get('info') . ' (' . $config->get('delta') . ')';
+    // hardcoding the module as block for now.
+    // Deltas are the same as the custom block name.
+    $key = 'block' . '_delta_' . $config->get('delta');
+    $blocksarray[$key] = $config->get('title') . ' (Block)';
   }
   return $blocksarray;
 }
