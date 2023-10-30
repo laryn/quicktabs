@@ -10,11 +10,11 @@ class QuickViewContent extends QuickContent {
   // id. Unfortunately we can only control the ones that Quicktabs is responsible
   // for, so if there are other views on the page, there may be duplicate ids.
   static $view_dom_id = 1;
-  
+
   public static function getType() {
     return 'view';
   }
-  
+
   public function optionsForm($delta, $qt) {
     $tab = $this->settings;
     $form = array();
@@ -56,7 +56,7 @@ class QuickViewContent extends QuickContent {
     );
     return $form;
   }
-  
+
   public function __construct($item) {
     parent::__construct($item);
     if (module_exists('views')) views_add_js('ajax_view');
@@ -67,7 +67,7 @@ class QuickViewContent extends QuickContent {
     if (isset($item['args'])) {
       $url_args = arg();
       $args = $item['args'];
-  
+
       foreach ($url_args as $id => $arg) {
         $args = str_replace("%$id", $arg, $args);
       }

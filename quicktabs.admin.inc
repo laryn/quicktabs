@@ -313,6 +313,7 @@ function _quicktabs_form(array $tab, $qt) {
       }
     }
     $tabtypes[$name] = $name;
+    backdrop_sort($tabtypes);
     $content_provider = quick_content_factory($name, $tab);
     if (is_object($content_provider)) {
       $form = array_merge_recursive($form, $content_provider->optionsForm($delta, $qt));
@@ -457,6 +458,18 @@ function quicktabs_form_validate($form, &$form_state) {
       if (empty($tab['title'])) {
         form_set_error('tabs][' . $j . '][title', t('Title is required for each tab.'));
       }
+
+      // @todo add a validation method to each class and call it.
+      // For now just hardcode some checks.
+      if ($tab['type'] == 'node') {
+        module_load_include('inc', 'node', 'node.pages');
+        if ($nid = node_autocomplete_validate($tab['node']['nid'])) {
+          $form_state['values']['tabs'][$j]['node']['nid'] = $nid;
+        }
+        else {
+          form_error($form['nid'], t('Sorry, no content matching <em>%title</em> was found.', array('%title' => $form_state['values']['tabs'][$j]['node']['nid'])));
+        }
+      }
     }
   }
 }
@@ -518,32 +531,6 @@ function quicktabs_block_delete_submit($form, &$form_state) {
   cache_clear_all();
   $form_state['redirect'] = 'admin/structure/quicktabs';
 };
-
-/**
- * Export form for quicktabs.
- */
-function quicktabs_export_form($form, &$form_state, $qt) {
-  ctools_include('export');
-  // Generate export code
-  $code = ctools_export_object('quicktabs', $qt, '');
-
-  // Create form
-  $form = array();
-  $form['export'] = array(
-    '#type' => 'textarea',
-    '#default_value' => $code,
-    '#rows' => substr_count($code, "\n") + 1,
-    '#resizable' => FALSE,
-    '#description' => t('Place this code in your module\'s implementation of <code>hook_quicktabs_default_quicktabs()</code> to provide it as a default quicktab.'),
-  );
-  $form['done'] = array(
-    '#type' => 'submit',
-    '#value' => t('Done'),
-  );
-  $form['#redirect'] = 'admin/structure/quicktabs';
-
-  return $form;
-}
 
 /**
  * Helper function to get all blocks.

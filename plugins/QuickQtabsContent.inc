@@ -5,11 +5,11 @@
  * as the tab content of another QuickSet instance.
  */
 class QuickQtabsContent extends QuickContent {
-  
+
   public static function getType() {
     return 'qtabs';
   }
-  
+
   public function optionsForm($delta, $qt) {
     $tab = $this->settings;
     $form = array();

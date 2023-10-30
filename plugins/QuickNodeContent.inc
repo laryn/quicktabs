@@ -5,7 +5,7 @@
  * content.
  */
 class QuickNodeContent extends QuickContent {
-  
+
   public static function getType() {
     return 'node';
   }
@@ -13,13 +13,22 @@ class QuickNodeContent extends QuickContent {
   public function optionsForm($delta, $qt) {
     $tab = $this->settings;
     $form = array();
+
+    $nid_default = '';
+    if (!empty($tab['nid'])) {
+      $title = db_query("SELECT title FROM {node} WHERE nid = :nid", array(':nid' => $tab['nid']))->fetchField();
+      $nid_default = $title . ' [' . $tab['nid'] . ']';
+    }
+
     $form['node']['nid'] = array(
       '#type' => 'textfield',
       '#title' => t('Node'),
-      '#description' => t('The node ID of the node.'),
-      '#maxlength' => 10,
-      '#size' => 20,
-      '#default_value' => isset($tab['nid']) ? $tab['nid'] : '',
+      '#description' => t('The node ID of the node. Start typing to see a list of suggestions.'),
+      '#placeholder' => ' ',
+      '#autocomplete_path' => 'node/autocomplete',
+      '#maxlength' => 512,
+      '#size' => 50,
+      '#default_value' => $nid_default,
     );
     $entity_info = entity_get_info('node');
     $view_modes = array();
@@ -71,7 +80,7 @@ class QuickNodeContent extends QuickContent {
     }
     return $output;
   }
-  
+
   public function getAjaxKeys() {
     return array('nid', 'view_mode', 'hide_title');
   }
