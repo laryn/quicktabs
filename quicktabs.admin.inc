@@ -455,38 +455,9 @@ function quicktabs_form_validate($form, &$form_state) {
       if (empty($tab['title'])) {
         form_set_error('tabs][' . $j . '][title', t('Title is required for each tab.'));
       }
-
-      // @todo add a validation method to each class and call it.
-      // For now just hardcode some checks.
-      if ($tab['type'] == 'node') {
-        module_load_include('inc', 'node', 'node.pages');
-        if ($nid = node_autocomplete_validate($tab['node']['nid'])) {
-          $form_state['values']['tabs'][$j]['node']['nid'] = $nid;
-        }
-        else {
-          form_error($form['nid'], t('Sorry, no content matching <em>%title</em> was found.', array('%title' => $form_state['values']['tabs'][$j]['node']['nid'])));
-        }
-      }
     }
   }
 }
-
-function quicktabs_callback_element_validate($element, &$form_state, $form) {
-  // We can tell which tab delta the element is for from the element's #parents
-  // property, which is an array based on the tree structure.
-  $delta = $element['#parents'][1];
-  if ($form_state['values']['tabs'][$delta]['type'] == 'callback') {
-    if (empty($element['#value']) || url_is_external($element['#value'])) {
-      form_error($element, t('You must specify a valid path.'));
-    }
-    if (strpos($element['#value'], '%') === 0) {
-      form_error($element, t('"%" may not be used for the first segment of a path.'));
-    }
-    // automatically remove '/' from path.
-    $form_state['values']['tabs'][$delta]['callback']['path'] = trim($form_state['values']['tabs'][$delta]['callback']['path'], '/');
-  }
-}
-
 
 /**
  * Submit handler for quicktabs admin page.

@@ -38,7 +38,7 @@ class QuickCallbackContent extends QuickContent {
       '#type' => 'textfield',
       '#default_value' => isset($tab['path']) ? $tab['path'] : '',
       '#title' => t('Path'),
-      '#element_validate' => array('quicktabs_callback_element_validate'),
+      '#element_validate' => array(array($this, 'elementValidatePath')),
     );
     $form['callback']['use_title'] = array(
       '#type' => 'checkbox',
@@ -48,6 +48,25 @@ class QuickCallbackContent extends QuickContent {
       '#description' => t('Should quicktabs use the rendered title of the callback?'),
     );
     return $form;
+  }
+
+  /**
+   * Callback for path element validation.
+   */
+  public function elementValidatePath($element, &$form_state, $form) {
+    $delta = $element['#parents'][1];
+    if ($form_state['values']['tabs'][$delta]['type'] != 'callback') {
+      return;
+    }
+
+    if (empty($element['#value']) || url_is_external($element['#value'])) {
+      form_error($element, t('You must specify a valid path.'));
+    }
+    if (strpos($element['#value'], '%') === 0) {
+      form_error($element, t('"%" may not be used for the first segment of a path.'));
+    }
+    // automatically remove '/' from path.
+    $form_state['values']['tabs'][$delta]['callback']['path'] = trim($form_state['values']['tabs'][$delta]['callback']['path'], '/');
   }
 
   public function render($hide_empty = FALSE, $args = array()) {

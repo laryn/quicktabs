@@ -444,10 +444,12 @@ abstract class QuickContent implements QuickContentRenderable {
    * Method for returning the form elements to display for this tab type on
    * the admin form.
    *
-   * @param $delta Integer representing this tab's position in the tabs array.
+   * @param int $delta
+   *   Integer representing this tab's position in the tabs array.
    *
-   * @param $qt An object representing the Quicktabs instance that the tabs are
-   * being built for.
+   * @param object $qt
+   *   An object representing the Quicktabs instance that the tabs are
+   *   being built for.
    */
   abstract public function optionsForm($delta, $qt);
 

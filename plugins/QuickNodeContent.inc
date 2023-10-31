@@ -29,6 +29,7 @@ class QuickNodeContent extends QuickContent {
       '#maxlength' => 512,
       '#size' => 50,
       '#default_value' => $nid_default,
+      '#element_validate' => array(array($this, 'elementValidateNid')),
     );
     $entity_info = entity_get_info('node');
     $view_modes = array();
@@ -55,6 +56,30 @@ class QuickNodeContent extends QuickContent {
     }
 
     return $form;
+  }
+
+  /**
+   * Callback for Nid element validation.
+   */
+  public function elementValidateNid($element, &$form_state, $form) {
+    $delta = $element['#parents'][1];
+    if ($form_state['values']['tabs'][$delta]['type'] != 'node') {
+      return;
+    }
+
+    module_load_include('inc', 'node', 'node.pages');
+    if (empty($element['#value'])) {
+      form_error($element, t('A node is required.'));
+    }
+    if (strpos($element['#value'], '%') === 0) {
+      form_error($element, t('"%" may not be used for the first segment of a path.'));
+    }
+    if ($nid = node_autocomplete_validate($element['#value'])) {
+      $form_state['values']['tabs'][$delta]['node']['nid'] = $nid;
+    }
+    else {
+      form_error($element, t('Sorry, no matching content was found for <em>%nid</em>.', array('%nid' => $element['#value'])));
+    }
   }
 
   public function render($hide_empty = FALSE, $args = array()) {

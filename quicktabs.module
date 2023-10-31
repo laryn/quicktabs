@@ -4,13 +4,13 @@ define('QUICKTABS_DELTA_NONE', 999999);
 /**
  * Implements hook_config_info().
  */
-// function quicktabs_config_info() {
-//   $prefixes['quicktabs.settings'] = array(
-//     'label' => t('Quicktabs settings'),
-//     'group' => t('Configuration'),
-//   );
-//   return $prefixes;
-// }
+function quicktabs_config_info() {
+  $prefixes['quicktabs.settings'] = array(
+    'label' => t('Quicktabs settings'),
+    'group' => t('Configuration'),
+  );
+  return $prefixes;
+}
 
 /**
  * Implements hook_autoload_info()
@@ -25,7 +25,6 @@ function quicktabs_autoload_info() {
     'InvalidQuickSetException' => 'quicktabs.classes.inc',
     // Views
     'quicktabs_style_plugin' => 'includes/quicktabs_style_plugin.inc',
-
     // Plugins
     'QuickAccordion' => 'plugins/QuickAccordion.inc',
     'QuickBlockContent' => 'plugins/QuickBlockContent.inc',
