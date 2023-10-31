@@ -14,12 +14,14 @@ class QuicktabsAdminTestCase extends BackdropWebTestCase {
 
     // Create some nodes that we can populate our tabs with.
     for ($i = 0; $i < 5; $i++) {
-      $node = new stdClass();
-      $node->type = 'page';
-      $node->title = 'This is node number '. ($i+1);
+      $settings = array(
+        'title' => 'This is node number '. ($i+1),
+        'type' => 'page',
+        'uid' => $admin_user->uid,
+      );
+      $node = new Node($settings);
       $node->body[LANGUAGE_NONE][0]['value'] = $this->randomString(255);
-      node_object_prepare($node);
-      node_save($node);
+      $node->save();
     }
   }
 
@@ -102,9 +104,7 @@ class QuicktabsAdminTestCase extends BackdropWebTestCase {
     $saved['tabs'] = array(0 => array('type' => 'node', 'nid' => 4, 'title' => $tab_title_second, 'weight' => 0, 'view_mode' => 'teaser', 'hide_title' => 1), 1 => array('type' => 'node', 'nid' => 3, 'title' => $tab_title_first, 'weight' => 1, 'view_mode' => 'teaser', 'hide_title' => 0));
     $this->backdropPost('admin/structure/quicktabs/manage/'. $quicktabs->machine_name .'/edit', $edit, t('Save'));
 
-    // Reset static vars because ctools will have cached the original $quicktabs object
-    backdrop_static_reset();
-    // Check that the quicktabs object is in the database.
+    // Check that the quicktabs object is saved.
     $edited_qt = quicktabs_load($quicktabs->machine_name);
     $this->assertTrue($edited_qt != FALSE, t('Quicktabs instance found in database'));
 
@@ -115,9 +115,8 @@ class QuicktabsAdminTestCase extends BackdropWebTestCase {
 
     // Delete the Quicktabs instance through the UI.
     $this->backdropPost('admin/structure/quicktabs/manage/'. $quicktabs->machine_name .'/delete', array(), t('Delete'));
-    // Reset static vars because ctools will have cached the original $quicktabs object
-    backdrop_static_reset();
-    // Check that the quicktabs object is no longer in the database.
+
+    // Check that the quicktabs object no longer exists.
     $this->assertNull(quicktabs_load($quicktabs->machine_name), t('Quicktabs instance not found in database'));
   }
 

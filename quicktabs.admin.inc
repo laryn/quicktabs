@@ -165,11 +165,9 @@ function _quicktabs_admin_main_form($form_state, &$qt) {
     if ($class = plugin_manager_load_class('quicktabs', 'renderers', $name, 'handler')) {
       // Add the renderer to the dropdown list of renderers
       $renderer_options[$name] = $name;
-      // Get the renderer's options form elements
 
-      // PHP 5.2 doesn't support $class::staticMethod() syntax, so we have to
-      // use call_user_func_array() until PHP 5.3 is required.
-      $renderer_form_options[$name] = call_user_func_array(array($class, 'optionsForm'), array($qt));
+      // Get the renderer's options form elements
+      $renderer_form_options[$name] = $class::optionsForm(array($qt));
     }
   }
   ksort($renderer_options);
@@ -313,7 +311,6 @@ function _quicktabs_form(array $tab, $qt) {
       }
     }
     $tabtypes[$name] = $name;
-    backdrop_sort($tabtypes);
     $content_provider = quick_content_factory($name, $tab);
     if (is_object($content_provider)) {
       $form = array_merge_recursive($form, $content_provider->optionsForm($delta, $qt));
@@ -536,6 +533,7 @@ function quicktabs_block_delete_submit($form, &$form_state) {
  * Helper function to get all blocks.
  */
 function quicktabs_get_blocks() {
+  $blocksarray = array();
   // @todo for now only support custom blocks.
   $config_names = config_get_names_with_prefix('block.custom.');
   foreach ($config_names as $config_name) {

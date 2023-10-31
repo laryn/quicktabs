@@ -456,7 +456,7 @@ function quicktabs_quicktabs_renderers() {
     'path' => $path,
     'handler' => array(
       'file' => 'QuickUiTabs.inc',
-      'class' => 'QuickUitabs',
+      'class' => 'QuickUiTabs',
     ),
   );
   $info['accordion'] = array(
@@ -475,6 +475,13 @@ function quicktabs_quicktabs_renderers() {
 function quicktabs_quicktabs_contents() {
   $info = array();
   $path = backdrop_get_path('module', 'quicktabs') . '/plugins';
+  $info['node'] = array(
+    'path' => $path,
+    'handler' => array(
+      'file' => 'QuickNodeContent.inc',
+      'class' => 'QuickNodeContent',
+    ),
+  );
   $info['block'] = array(
     'path' => $path,
     'handler' => array(
@@ -490,13 +497,6 @@ function quicktabs_quicktabs_contents() {
       'class' => 'QuickViewContent',
     ),
     'dependencies' => array('views'),
-  );
-  $info['node'] = array(
-    'path' => $path,
-    'handler' => array(
-      'file' => 'QuickNodeContent.inc',
-      'class' => 'QuickNodeContent',
-    ),
   );
   $info['qtabs'] = array(
     'path' => $path,
