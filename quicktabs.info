@@ -2,7 +2,6 @@ name = Quicktabs
 description = Render content with tabs and other display styles
 backdrop = 1.x
 type = module
-files[] = quicktabs.classes.inc
-files[] = includes/quicktabs_style_plugin.inc
+
 configure = admin/structure/quicktabs
-dependencies[] = "plugin_manager"
+dependencies[] = plugin_manager
