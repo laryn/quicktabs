@@ -11,7 +11,7 @@ function quicktabs_config_info() {
   );
   $prefixes['quicktabs.quicktab'] = array(
     'name_key' => 'machine_name',
-    'label_key' => 'label',
+    'label_key' => 'title',
     'group' => t('Quicktabs instances'),
   );
   return $prefixes;
